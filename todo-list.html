@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRUD To-Do List</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background:#0b1020;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      color:white;
+    }
+
+    .container{
+      width:500px;
+      background:#111827;
+      padding:25px;
+      border-radius:15px;
+      box-shadow:0 0 15px rgba(0,0,0,0.5);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:20px;
+      color:#00d4ff;
+    }
+
+    .input-box{
+      display:flex;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .input-box input{
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      outline:none;
+      font-size:16px;
+    }
+
+    .input-box button{
+      padding:12px 18px;
+      border:none;
+      border-radius:8px;
+      background:#00d4ff;
+      color:black;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .input-box button:hover{
+      background:#00aacc;
+    }
+
+    .task{
+      background:#1f2937;
+      padding:12px;
+      border-radius:10px;
+      margin-bottom:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .buttons button{
+      border:none;
+      padding:7px 12px;
+      border-radius:6px;
+      cursor:pointer;
+      margin-left:5px;
+      font-weight:bold;
+    }
+
+    .edit{
+      background:#facc15;
+    }
+
+    .delete{
+      background:#ef4444;
+      color:white;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>CRUD To-Do List</h1>
+
+    <div class="input-box">
+      <input type="text" id="taskInput" placeholder="Enter task...">
+      <button onclick="addTask()">Add</button>
+    </div>
+
+    <div id="taskList"></div>
+  </div>
+
+  <script>
+
+    let tasks = [];
+
+    // CREATE
+    function addTask(){
+
+      const input = document.getElementById("taskInput");
+
+      if(input.value.trim() === ""){
+        alert("Please enter a task");
+        return;
+      }
+
+      const task = {
+        id: Date.now(),
+        text: input.value
+      };
+
+      tasks.push(task);
+
+      input.value = "";
+
+      renderTasks();
+    }
+
+    // READ
+    function renderTasks(){
+
+      const taskList = document.getElementById("taskList");
+
+      taskList.innerHTML = "";
+
+      tasks.forEach(task => {
+
+        taskList.innerHTML += 
+          <div class="task">
+            <span>${task.text}</span>
+
+            <div class="buttons">
+              <button class="edit" onclick="editTask(${task.id})">
+                Edit
+              </button>
+
+              <button class="delete" onclick="deleteTask(${task.id})">
+                Delete
+              </button>
+            </div>
+          </div>
+        ;
+      });
+    }
+
+    // UPDATE
+    function editTask(id){
+
+      const newText = prompt("Edit your task:");
+
+      if(newText === null || newText.trim() === ""){
+        return;
+      }
+
+      tasks = tasks.map(task => {
+        if(task.id === id){
+          return {
+            ...task,
+            text: newText
+          };
+        }
+
+        return task;
+      });
+
+      renderTasks();
+    }
+
+    // DELETE
+    function deleteTask(id){
+
+      tasks = tasks.filter(task => task.id !== id);
+
+      renderTasks();
+    }
+
+  </script>
+
+</body>
+</html>
